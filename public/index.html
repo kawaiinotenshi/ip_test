@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#4CAF50">
     <meta name="description" content="Intranet Port Management Tool">
-    <title id="pageTitle">イントラネット管理ツール</title>
+    <title id="pageTitle">Intranet Management Tool</title>
     <style>
         * {
             box-sizing: border-box;
@@ -735,7 +735,7 @@
     
     <script>
         // 現在の言語設定
-        let currentLanguage = 'ja';
+        let currentLanguage = 'en';
         
         // 言語切り替え関数
         function switchLanguage(lang) {
@@ -1192,6 +1192,9 @@
             // 言語切り替えイベント
             document.getElementById('lang-ja').addEventListener('click', () => switchLanguage('ja'));
             document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
+            
+            // 初期言語を英語に設定
+            switchLanguage('en');
             
             // プレースホルダーを初期化
             updatePlaceholders();
