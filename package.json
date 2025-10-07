@@ -1,0 +1,25 @@
+{
+  "name": "ip-test",
+  "version": "1.0.0",
+  "description": "内网端口管理工具 - 支持子内网数据处理与多语言",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "kawaiinotenshi",
+  "license": "MIT",
+  "keywords": [
+    "内网",
+    "端口管理",
+    "数据处理",
+    "多语言支持",
+    "内网工具"
+  ],
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

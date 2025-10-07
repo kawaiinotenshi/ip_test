@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="description" content="内网端口管理工具，支持端口数据的增删查改">
+    <title>内网端口管理工具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 24px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .section {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #555;
+            border-left: 4px solid #4CAF50;
+            padding-left: 10px;
+        }
+        
+        h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .ip-section {
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+        
+        .ip-item {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            word-break: break-all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
+        
+        .real-ip {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .mock-ip {
+            background: #fff8e1;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .copy-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #45a049;
+        }
+        
+        .copy-btn:active {
+            background: #3d8b40;
+        }
+        
+        .form-group {
+            margin-bottom: 12px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #45a049;
+        }
+        
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #0b7dda;
+        }
+        
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #da190b;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .btn-outline:hover {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .ports-list {
+            margin-top: 16px;
+        }
+        
+        .port-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        
+        .port-item:active {
+            transform: scale(0.98);
+        }
+        
+        .port-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .port-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .port-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-online {
+            background: #e8f5e9;
+            color: #4CAF50;
+        }
+        
+        .status-offline {
+            background: #ffebee;
+            color: #f44336;
+        }
+        
+        .port-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+        
+        .port-meta {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+        }
+        
+        .port-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .update-btn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .refresh-btn {
+            background: #ff9800;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px 0;
+            color: #999;
+        }
+        
+        .empty-state p {
+            margin-bottom: 10px;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        .message-success {
+            background: #e8f5e9;
+            color: #4CAF50;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .message-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error);
+            border-color: var(--error);
+        }
+        
+        .message-info {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+            border-color: var(--info);
+        }
+        
+        .message-warning {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 2px solid var(--divider);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .update-info {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--divider);
+            flex: 1;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .chip {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .chip-success {
+            background: var(--success);
+        }
+        
+        .chip-warning {
+            background: var(--warning);
+        }
+        
+        .chip-error {
+            background: var(--error);
+        }
+        
+        /* モーダルダイアログ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--divider);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        
+        .close-modal:hover {
+            background: var(--divider);
+        }
+        
+        .required-field::after {
+            content: ' *';
+            color: var(--error);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 4px;
+            cursor: help;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+        
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* レスポンシブデザイン */
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+            
+            section {
+                padding: 16px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .app-title {
+                font-size: 20px;
+            }
+            
+            .port-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                text-align: center;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .section-title {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="language-switcher">
+                <button id="lang-ja" class="lang-btn active">日本語</button>
+                <button id="lang-en" class="lang-btn">English</button>
+            </div>
+            <h1 class="app-title">イントラネット管理ツール</h1>
+            <p class="app-subtitle">Intranet Management Tool</p>
+        </header>
+        
+        <!-- メッセージ表示エリア -->
+        <div id="message" class="message"></div>
+        
+        <!-- IPアドレス情報 -->
+        <section>
+            <h2>
+                <i>📶</i>
+                <span class="i18n" data-ja="イントラネットアクセスアドレス" data-en="Intranet Access Addresses">イントラネットアクセスアドレス</span>
+            </h2>
+            
+            <!-- 実際のIPアドレス -->
+            <div class="ip-section">
+                <h3>
+                    <span class="i18n" data-ja="実際のイントラネットIP" data-en="Real Intranet IP">実際のイントラネットIP</span>
+                    <span style="color: var(--success); font-size: 12px; margin-left: 8px; font-weight: normal;">
+                        <span class="i18n" data-ja="(推奨)" data-en="(Recommended)">(推奨)</span>
+                    </span>
+                </h3>
+                <div id="real-ips" class="ip-list">
+                    <p class="loading i18n" data-ja="読み込み中..." data-en="Loading...">読み込み中...</p>
+                </div>
+            </div>
+            
+            <!-- モックIPアドレス -->
+            <div class="ip-section">
+                <h3>
+                    <span class="i18n" data-ja="モックIPアドレス" data-en="Mock IP Addresses">モックIPアドレス</span>
+                    <span style="color: var(--warning); font-size: 12px; margin-left: 8px; font-weight: normal;">
+                        <span class="i18n" data-ja="(参考用)" data-en="(For reference only)">(参考用)</span>
+                    </span>
+                </h3>
+                <div id="mock-ips" class="ip-list">
+                    <p class="loading i18n" data-ja="読み込み中..." data-en="Loading...">読み込み中...</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ポートデータの追加 -->
+        <section>
+            <h2>
+                <i>➕</i>
+                <span class="i18n" data-ja="ポートデータの追加" data-en="Add Port Data">ポートデータの追加</span>
+            </h2>
+            <form id="addPortForm">
+                <div class="form-group">
+                    <label for="portNumber" class="i18n required-field" data-ja="ポート番号" data-en="Port Number">ポート番号</label>
+                    <input type="number" id="portNumber" min="1" max="65535" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="portStatus" class="i18n required-field" data-ja="ステータス" data-en="Status">ステータス</label>
+                    <select id="portStatus" required>
+                        <option value="online"><span class="i18n" data-ja="オンライン" data-en="Online">オンライン</span></option>
+                        <option value="offline"><span class="i18n" data-ja="オフライン" data-en="Offline">オフライン</span></option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="portDescription" class="i18n" data-ja="説明" data-en="Description">説明</label>
+                    <textarea id="portDescription" placeholder="
+                        <span class='i18n' data-ja='ポートの説明を入力してください（オプション）' data-en='Please enter port description (optional)'>
+                            ポートの説明を入力してください（オプション）
+                        </span>
+                    "></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary i18n" data-ja="ポートを追加" data-en="Add Port">ポートを追加</button>
+            </form>
+        </section>
+        
+        <!-- ポートデータリスト -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i>📋</i>
+                    <span class="i18n" data-ja="ポートデータリスト" data-en="Port Data List">ポートデータリスト</span>
+                </h2>
+                <div class="action-buttons">
+                    <button id="refreshBtn" class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
+                        <i>🔄</i>
+                        <span class="i18n" data-ja="更新" data-en="Refresh">更新</span>
+                    </button>
+                </div>
+            </div>
+            <div class="update-info" id="updateTime"><span class="i18n" data-ja="最終更新: " data-en="Last updated: ">最終更新: </span><span class="i18n" data-ja="読み込み中..." data-en="Loading...">読み込み中...</span></div>
+            <div id="portsList" class="ports-list">
+                <p class="loading i18n" data-ja="読み込み中..." data-en="Loading...">読み込み中...</p>
+            </div>
+        </section>
+        
+        <!-- ポートデータ編集ダイアログ -->
+        <div id="editDialog" class="modal">
+            <div class="modal-content">
+                <button type="button" class="close-modal" id="closeEdit">×</button>
+                <div class="modal-header">
+                    <h3 class="modal-title i18n" data-ja="ポートを編集" data-en="Edit Port">ポートを編集</h3>
+                </div>
+                <form id="editPortForm">
+                    <input type="hidden" id="editPortId">
+                    
+                    <div class="form-group">
+                        <label for="editPortNumber" class="i18n required-field" data-ja="ポート番号" data-en="Port Number">ポート番号</label>
+                        <input type="number" id="editPortNumber" min="1" max="65535">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editPortStatus" class="i18n required-field" data-ja="ステータス" data-en="Status">ステータス</label>
+                        <select id="editPortStatus">
+                            <option value="online"><span class="i18n" data-ja="オンライン" data-en="Online">オンライン</span></option>
+                            <option value="offline"><span class="i18n" data-ja="オフライン" data-en="Offline">オフライン</span></option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editPortDescription" class="i18n" data-ja="説明" data-en="Description">説明</label>
+                        <textarea id="editPortDescription" placeholder="
+                            <span class='i18n' data-ja='ポートの説明を入力してください（オプション）' data-en='Please enter port description (optional)'>
+                                ポートの説明を入力してください（オプション）
+                            </span>
+                        "></textarea>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-secondary i18n" data-ja="変更を保存" data-en="Save Changes">変更を保存</button>
+                        <button type="button" id="closeEditModal" class="btn btn-outline i18n" data-ja="キャンセル" data-en="Cancel">キャンセル</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- フッター -->
+        <footer style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 12px; border-top: 1px solid var(--divider);">
+            <p class="i18n" data-ja="イントラネットIPポート管理ツール v1.0.0" data-en="Intranet IP Port Management Tool v1.0.0">イントラネットIPポート管理ツール v1.0.0</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 現在の言語設定
+        let currentLanguage = 'ja';
+        
+        // 言語切り替え関数
+        function switchLanguage(lang) {
+            if (lang === currentLanguage) return;
+            
+            currentLanguage = lang;
+            
+            // 更新言語ボタンの状態
+            document.getElementById('lang-ja').classList.toggle('active', lang === 'ja');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+            
+            // 更新すべてのi18n要素
+            document.querySelectorAll('.i18n').forEach(element => {
+                element.textContent = element.dataset[lang];
+            });
+            
+            // フォームのプレースホルダーも更新
+            updatePlaceholders();
+            
+            // 更新メッセージ表示
+            updateMessages();
+            
+            // 更新日付フォーマット
+            updateDateTimeFormats();
+        }
+        
+        // プレースホルダー更新
+        function updatePlaceholders() {
+            const portDescription = document.getElementById('portDescription');
+            const editPortDescription = document.getElementById('editPortDescription');
+            
+            const placeholderText = currentLanguage === 'ja' 
+                ? 'ポートの説明を入力してください（オプション）' 
+                : 'Please enter port description (optional)';
+                
+            portDescription.placeholder = placeholderText;
+            editPortDescription.placeholder = placeholderText;
+        }
+        
+        // メッセージ表示
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = 'message message-' + type;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        // メッセージ更新
+        function updateMessages() {
+            const messageDiv = document.getElementById('message');
+            if (messageDiv.style.display === 'block') {
+                // メッセージのタイプに応じて翻訳
+                if (messageDiv.textContent.includes('成功') || messageDiv.textContent.includes('成功')) {
+                    const successMsg = currentLanguage === 'ja' ? '成功' : 'Success';
+                    messageDiv.textContent = messageDiv.textContent.replace(/成功/g, successMsg);
+                }
+            }
+        }
+        
+        // クリップボードにコピー
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    showMessage(
+                        currentLanguage === 'ja' ? 'コピーしました' : 'Copied successfully', 
+                        'success'
+                    );
+                })
+                .catch(err => {
+                    console.error('コピー失敗:', err);
+                    showMessage(
+                        currentLanguage === 'ja' ? 'コピーに失敗しました。手動でコピーしてください' : 'Copy failed. Please copy manually', 
+                        'error'
+                    );
+                });
+        }
+        
+        // IP表示要素を追加
+        function addIPDisplay(container, ipUrl, type = '') {
+            const ipItem = document.createElement('div');
+            ipItem.className = `ip-item ${type}`;
+            
+            const ipText = document.createElement('span');
+            ipText.textContent = ipUrl;
+            
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = currentLanguage === 'ja' ? 'コピー' : 'Copy';
+            copyBtn.onclick = () => copyToClipboard(ipUrl);
+            
+            ipItem.appendChild(ipText);
+            ipItem.appendChild(copyBtn);
+            container.appendChild(ipItem);
+        }
+        
+        // 日時のフォーマット
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (currentLanguage === 'ja') {
+                if (diffMins < 1) {
+                    return 'たった今';
+                } else if (diffMins < 60) {
+                    return `${diffMins}分前`;
+                } else if (diffHours < 24) {
+                    return `${diffHours}時間前`;
+                } else if (diffDays < 7) {
+                    return `${diffDays}日前`;
+                } else {
+                    return date.toLocaleString('ja-JP', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            } else {
+                if (diffMins < 1) {
+                    return 'Just now';
+                } else if (diffMins < 60) {
+                    return `${diffMins}m ago`;
+                } else if (diffHours < 24) {
+                    return `${diffHours}h ago`;
+                } else if (diffDays < 7) {
+                    return `${diffDays}d ago`;
+                } else {
+                    return date.toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            }
+        }
+        
+        // 日付フォーマット更新
+        function updateDateTimeFormats() {
+            // すでに読み込まれているデータの日付フォーマットを更新
+            const portItems = document.querySelectorAll('.port-meta');
+            portItems.forEach(item => {
+                const dates = item.textContent.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/g);
+                if (dates) {
+                    // 元の日付を保持しながらフォーマットのみ更新
+                    let text = item.textContent;
+                    dates.forEach(date => {
+                        text = text.replace(formatDateTime(date), formatDateTime(date));
+                    });
+                    item.textContent = text;
+                }
+            });
+            
+            // 最終更新時間も更新
+            const updateTimeElement = document.getElementById('updateTime');
+            const updateTime = updateTimeElement.getAttribute('data-update-time');
+            if (updateTime) {
+                updateTimeElement.innerHTML = `<span class="i18n" data-ja="最終更新: " data-en="Last updated: ">${currentLanguage === 'ja' ? '最終更新: ' : 'Last updated: '}</span>${formatDateTime(updateTime)}`;
+            }
+        }
+        
+        // IPアドレス情報をロード
+        function loadIPAddresses() {
+            fetch('/api/config')
+                .then(response => response.json())
+                .then(data => {
+                    // 実際のIPアドレスを表示
+                    const realIpContainer = document.getElementById('real-ips');
+                    realIpContainer.innerHTML = '';
+                    
+                    if (data.realIPs && data.realIPs.length > 0) {
+                        data.realIPs.forEach(ip => {
+                            const ipUrl = `http://${ip}:${data.port}`;
+                            addIPDisplay(realIpContainer, ipUrl, 'real-ip');
+                        });
+                    } else {
+                        realIpContainer.innerHTML = `<p style="color: var(--error);" class="i18n" data-ja="イントラネットIPアドレスが検出されませんでした。ネットワーク接続を確認してください" data-en="No intranet IP addresses detected. Please check your network connection">イントラネットIPアドレスが検出されませんでした。ネットワーク接続を確認してください</p>`;
+                    }
+                    
+                    // モックIPアドレスを表示
+                    const mockIpContainer = document.getElementById('mock-ips');
+                    mockIpContainer.innerHTML = '';
+                    
+                    if (data.mockIPs && data.mockIPs.length > 0) {
+                        data.mockIPs.forEach(ip => {
+                            const ipUrl = `http://${ip}:${data.port}`;
+                            addIPDisplay(mockIpContainer, ipUrl, 'mock-ip');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('IPアドレスの取得に失敗:', error);
+                    document.getElementById('real-ips').innerHTML = `<p style="color: var(--error);" class="i18n" data-ja="IPアドレスの取得に失敗しました" data-en="Failed to get IP addresses">IPアドレスの取得に失敗しました</p>`;
+                    document.getElementById('mock-ips').innerHTML = '';
+                });
+        }
+        
+        // ポートデータをロード
+        function loadPortsData() {
+            document.getElementById('portsList').innerHTML = `<p class="loading i18n" data-ja="読み込み中..." data-en="Loading...">読み込み中...</p>`;
+            
+            fetch('/api/ports')
+                .then(response => response.json())
+                .then(data => {
+                    const portsList = document.getElementById('portsList');
+                    const updateTime = document.getElementById('updateTime');
+                    
+                    // 最終更新時間を保存
+                    updateTime.setAttribute('data-update-time', data.updatedAt);
+                    updateTime.innerHTML = `<span class="i18n" data-ja="最終更新: " data-en="Last updated: ">${currentLanguage === 'ja' ? '最終更新: ' : 'Last updated: '}</span>${formatDateTime(data.updatedAt)}`;
+                    
+                    if (data.success && data.ports && data.ports.length > 0) {
+                        // ポート番号でソート
+                        const sortedPorts = data.ports.sort((a, b) => a.port - b.port);
+                        
+                        portsList.innerHTML = '';
+                        
+                        sortedPorts.forEach(port => {
+                            const portItem = document.createElement('div');
+                            portItem.className = 'port-item';
+                            
+                            // オンライン/オフラインのテキストを現在の言語に合わせる
+                            const statusText = currentLanguage === 'ja' 
+                                ? (port.status === 'online' ? 'オンライン' : 'オフライン')
+                                : (port.status === 'online' ? 'Online' : 'Offline');
+                            
+                            portItem.innerHTML = `
+                                <div class="port-header">
+                                    <span class="port-number">${port.port}</span>
+                                    <span class="port-status status-${port.status}">${statusText}</span>
+                                </div>
+                                <div class="port-description">${port.description || (currentLanguage === 'ja' ? '説明なし' : 'No description')}</div>
+                                <div class="port-meta">
+                                    ${currentLanguage === 'ja' ? '作成日: ' : 'Created: '}${formatDateTime(port.createdAt)}
+                                    ${port.updatedAt ? '<br>' + (currentLanguage === 'ja' ? '更新日: ' : 'Updated: ') + formatDateTime(port.updatedAt) : ''}
+                                </div>
+                                <div class="port-actions">
+                                    <button class="action-btn update-btn" data-id="${port.id}">${currentLanguage === 'ja' ? '編集' : 'Edit'}</button>
+                                    <button class="action-btn delete-btn" data-id="${port.id}">${currentLanguage === 'ja' ? '削除' : 'Delete'}</button>
+                                </div>
+                            `;
+                            
+                            portsList.appendChild(portItem);
+                        });
+                        
+                        // 編集と削除ボタンのイベントリスナーを追加
+                        document.querySelectorAll('.update-btn').forEach(btn => {
+                            btn.addEventListener('click', handleEditPort);
+                        });
+                        
+                        document.querySelectorAll('.delete-btn').forEach(btn => {
+                            btn.addEventListener('click', handleDeletePort);
+                        });
+                    } else {
+                        portsList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <p class="i18n" data-ja="ポートデータはありません" data-en="No port data available">ポートデータはありません</p>
+                                <p class="i18n" data-ja="上でポート情報を追加してください" data-en="Please add port information above">上でポート情報を追加してください</p>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('ポートデータの取得に失敗:', error);
+                    document.getElementById('portsList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⚠️</div>
+                            <p style="color: var(--error);" class="i18n" data-ja="データの取得に失敗しました。ネットワーク接続を確認してください" data-en="Failed to fetch data. Please check your network connection">データの取得に失敗しました。ネットワーク接続を確認してください</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // ポート追加処理
+        function handleAddPort(e) {
+            e.preventDefault();
+            
+            const portNumber = document.getElementById('portNumber').value;
+            const portStatus = document.getElementById('portStatus').value;
+            const portDescription = document.getElementById('portDescription').value;
+            
+            fetch('/api/ports', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    port: portNumber,
+                    status: portStatus,
+                    description: portDescription
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(
+                        currentLanguage === 'ja' ? 'ポートが正常に追加されました' : 'Port added successfully', 
+                        'success'
+                    );
+                    
+                    // フォームをリセット
+                    document.getElementById('addPortForm').reset();
+                    
+                    // ポートデータを再ロード
+                    loadPortsData();
+                } else {
+                    showMessage(
+                        data.error || (currentLanguage === 'ja' ? '追加に失敗しました' : 'Failed to add'), 
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('ポート追加失敗:', error);
+                showMessage(
+                    currentLanguage === 'ja' ? '追加に失敗しました。再試行してください' : 'Failed to add. Please try again', 
+                    'error'
+                );
+            });
+        }
+        
+        // ポート編集処理
+        function handleEditPort(e) {
+            const portId = e.target.getAttribute('data-id');
+            
+            // ポートデータを取得
+            fetch('/api/ports')
+                .then(response => response.json())
+                .then(data => {
+                    const port = data.ports.find(p => p.id === portId);
+                    
+                    if (port) {
+                        // 編集フォームにデータを入力
+                        document.getElementById('editPortId').value = port.id;
+                        document.getElementById('editPortNumber').value = port.port;
+                        document.getElementById('editPortStatus').value = port.status;
+                        document.getElementById('editPortDescription').value = port.description || '';
+                        
+                        // 編集ダイアログを表示
+                        document.getElementById('editDialog').classList.add('active');
+                    }
+                });
+        }
+        
+        // 編集保存処理
+        function handleSaveEdit(e) {
+            e.preventDefault();
+            
+            const portId = document.getElementById('editPortId').value;
+            const portNumber = document.getElementById('editPortNumber').value;
+            const portStatus = document.getElementById('editPortStatus').value;
+            const portDescription = document.getElementById('editPortDescription').value;
+            
+            fetch(`/api/ports/${portId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    port: portNumber,
+                    status: portStatus,
+                    description: portDescription
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(
+                        currentLanguage === 'ja' ? 'ポートが正常に更新されました' : 'Port updated successfully', 
+                        'success'
+                    );
+                    
+                    // ダイアログを閉じる
+                    document.getElementById('editDialog').classList.remove('active');
+                    
+                    // ポートデータを再ロード
+                    loadPortsData();
+                } else {
+                    showMessage(
+                        data.error || (currentLanguage === 'ja' ? '更新に失敗しました' : 'Failed to update'), 
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('ポート更新失敗:', error);
+                showMessage(
+                    currentLanguage === 'ja' ? '更新に失敗しました。再試行してください' : 'Failed to update. Please try again', 
+                    'error'
+                );
+            });
+        }
+        
+        // ポート削除処理
+        function handleDeletePort(e) {
+            const confirmMessage = currentLanguage === 'ja' 
+                ? 'このポートデータを削除してもよろしいですか？' 
+                : 'Are you sure you want to delete this port data?';
+                
+            if (confirm(confirmMessage)) {
+                const portId = e.target.getAttribute('data-id');
+                
+                fetch(`/api/ports/${portId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(
+                            currentLanguage === 'ja' ? 'ポートが正常に削除されました' : 'Port deleted successfully', 
+                            'success'
+                        );
+                        
+                        // ポートデータを再ロード
+                        loadPortsData();
+                    } else {
+                        showMessage(
+                            data.error || (currentLanguage === 'ja' ? '削除に失敗しました' : 'Failed to delete'), 
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('ポート削除失敗:', error);
+                    showMessage(
+                        currentLanguage === 'ja' ? '削除に失敗しました。再試行してください' : 'Failed to delete. Please try again', 
+                        'error'
+                    );
+                });
+            }
+        }
+        
+        // ダイアログを閉じる
+        function closeModal() {
+            document.getElementById('editDialog').classList.remove('active');
+        }
+        
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 言語切り替えイベント
+            document.getElementById('lang-ja').addEventListener('click', () => switchLanguage('ja'));
+            document.getElementById('lang-en').addEventListener('click', () => switchLanguage('en'));
+            
+            // プレースホルダーを初期化
+            updatePlaceholders();
+            
+            // IPアドレスをロード
+            loadIPAddresses();
+            
+            // ポートデータをロード
+            loadPortsData();
+            
+            // ポート追加フォームの送信
+            document.getElementById('addPortForm').addEventListener('submit', handleAddPort);
+            
+            // ポート編集フォームの送信
+            document.getElementById('editPortForm').addEventListener('submit', handleSaveEdit);
+            
+            // 取消編集
+            document.getElementById('closeEditModal').addEventListener('click', function() {
+                document.getElementById('editDialog').classList.remove('active');
+            });
+            
+            // 刷新按钮
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                loadPortsData();
+                showMessage('数据已刷新', 'info');
+            });
+            
+            // 点击对话框外部关闭对话框
+            document.getElementById('editDialog').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // ESCキーでダイアログを閉じる
+            // 刷新按钮
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                loadPortsData();
+                showMessage(
+                    currentLanguage === 'ja' ? 'データを更新しました' : 'Data refreshed', 
+                    'info'
+                );
+            });
+            
+            // ESCキーでダイアログを閉じる
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
