@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2196F3">
-    <meta name="description" content="模块化内网管理系统 - 管理控制台">
-    <title>模块化内网管理系统 - 管理控制台</title>
+    <meta name="description" content="Intranet Management System - Dashboard">
+    <title>Intranet Management System - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/i18n.js"></script>
     <style>
         :root {
             --primary: #2196F3;
@@ -42,7 +43,39 @@
             min-height: 100vh;
         }
 
-        /* 侧边栏 */
+        /* Language Switcher */
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(33, 150, 243, 0.1);
+            border-color: var(--primary);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--card-bg);
@@ -797,34 +830,40 @@
     </style>
 </head>
 <body>
-    <!-- 侧边栏 -->
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="en" onclick="switchLanguage('en')">English</button>
+        <button class="lang-btn" data-lang="ja" onclick="switchLanguage('ja')">日本語</button>
+    </div>
+    
+    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h1><i class="fas fa-network-wired"></i> 内网管理系统</h1>
-            <p>模块化管理平台</p>
+            <h1 data-i18n="sidebar.title"><i class="fas fa-network-wired"></i> Intranet Management</h1>
+            <p data-i18n="sidebar.subtitle">Modular Management Platform</p>
         </div>
         
         <nav class="sidebar-menu">
-            <div class="menu-title">主要功能</div>
-            <a href="#dashboard" class="menu-item active" data-section="dashboard">
-                <i class="fas fa-tachometer-alt"></i> 控制台
+            <div class="menu-title" data-i18n="sidebar.mainFeatures">Main Features</div>
+            <a href="#dashboard" class="menu-item active" data-section="dashboard" data-i18n="sidebar.dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
             </a>
-            <a href="#devices" class="menu-item" data-section="devices">
-                <i class="fas fa-server"></i> 设备管理
+            <a href="#devices" class="menu-item" data-section="devices" data-i18n="sidebar.devices">
+                <i class="fas fa-server"></i> Device Management
             </a>
-            <a href="#ports" class="menu-item" data-section="ports">
-                <i class="fas fa-plug"></i> 端口管理
+            <a href="#ports" class="menu-item" data-section="ports" data-i18n="sidebar.ports">
+                <i class="fas fa-plug"></i> Port Management
             </a>
-            <a href="#network" class="menu-item" data-section="network">
-                <i class="fas fa-project-diagram"></i> 网络拓扑
+            <a href="#network" class="menu-item" data-section="network" data-i18n="sidebar.network">
+                <i class="fas fa-project-diagram"></i> Network Topology
             </a>
             
-            <div class="menu-title">系统设置</div>
-            <a href="#users" class="menu-item" data-section="users">
-                <i class="fas fa-users"></i> 用户管理
+            <div class="menu-title" data-i18n="sidebar.systemSettings">System Settings</div>
+            <a href="#users" class="menu-item" data-section="users" data-i18n="sidebar.users">
+                <i class="fas fa-users"></i> User Management
             </a>
-            <a href="#settings" class="menu-item" data-section="settings">
-                <i class="fas fa-cog"></i> 系统设置
+            <a href="#settings" class="menu-item" data-section="settings" data-i18n="sidebar.settings">
+                <i class="fas fa-cog"></i> System Configuration
             </a>
         </nav>
         
@@ -832,23 +871,23 @@
             <div class="user-info">
                 <div class="user-avatar" id="userAvatar">AD</div>
                 <div class="user-details">
-                    <h4 id="username">管理员</h4>
+                    <h4 id="username" data-i18n="user.name">Admin</h4>
                     <p id="userRole">admin</p>
                 </div>
             </div>
-            <button id="logoutBtn" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> 退出登录
+            <button id="logoutBtn" class="logout-btn" data-i18n="sidebar.logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
     </aside>
 
-    <!-- 主内容区 -->
+    <!-- Main Content -->
     <main class="main-content">
-        <!-- 头部 -->
+        <!-- Header -->
         <header class="header">
             <div class="header-left">
                 <i class="fas fa-bars toggle-sidebar"></i>
-                <h2 class="page-title" id="pageTitle">控制台</h2>
+                <h2 class="page-title" id="pageTitle" data-i18n="page.dashboard">Dashboard</h2>
             </div>
             <div class="header-right">
                 <div class="notification-btn">
@@ -871,10 +910,10 @@
                             <i class="fas fa-server"></i>
                         </div>
                         <div class="stat-value">24</div>
-                        <div class="stat-label">在线设备</div>
+                        <div class="stat-label" data-i18n="stats.onlineDevices">Online Devices</div>
                         <div class="stat-change positive">
                             <i class="fas fa-arrow-up"></i>
-                            <span>12% 较上周</span>
+                            <span data-i18n="stats.increase">12% from last week</span>
                         </div>
                     </div>
                     
@@ -883,10 +922,10 @@
                             <i class="fas fa-plug"></i>
                         </div>
                         <div class="stat-value">128</div>
-                        <div class="stat-label">可用端口</div>
+                        <div class="stat-label" data-i18n="stats.availablePorts">Available Ports</div>
                         <div class="stat-change positive">
                             <i class="fas fa-arrow-up"></i>
-                            <span>8% 较上周</span>
+                            <span data-i18n="stats.increase8">8% from last week</span>
                         </div>
                     </div>
                     
@@ -895,10 +934,10 @@
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div class="stat-value">3</div>
-                        <div class="stat-label">异常告警</div>
+                        <div class="stat-label" data-i18n="stats.alerts">Alerts</div>
                         <div class="stat-change negative">
                             <i class="fas fa-arrow-down"></i>
-                            <span>25% 较上周</span>
+                            <span data-i18n="stats.decrease">25% from last week</span>
                         </div>
                     </div>
                     
@@ -907,20 +946,20 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <div class="stat-value">8</div>
-                        <div class="stat-label">活跃用户</div>
+                        <div class="stat-label" data-i18n="stats.activeUsers">Active Users</div>
                         <div class="stat-change positive">
                             <i class="fas fa-arrow-up"></i>
-                            <span>5% 较上周</span>
+                            <span data-i18n="stats.increase5">5% from last week</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">网络拓扑图</h3>
+                        <h3 class="card-title" data-i18n="section.networkTopology">Network Topology</h3>
                         <div class="card-actions">
-                            <button class="btn btn-outline" id="refreshTopology">
-                                <i class="fas fa-sync-alt"></i> 刷新
+                            <button class="btn btn-outline" id="refreshTopology" data-i18n="action.refresh">
+                                <i class="fas fa-sync-alt"></i> Refresh
                             </button>
                         </div>
                     </div>
@@ -929,26 +968,26 @@
                             <div class="loading"></div>
                         </div>
                         <div id="topologyContent" style="display: none;">
-                            <!-- 拓扑图将通过JavaScript加载 -->
+                            <!-- Topology will be loaded via JavaScript -->
                             <div style="text-align: center; padding: 20px;">
-                                <p>网络拓扑图加载中...</p>
+                                <p data-i18n="message.loadingTopology">Loading network topology...</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 设备管理面板 -->
+            <!-- Device Management Panel -->
             <section id="devices-section" class="section-content" style="display: none;">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">设备列表</h3>
+                        <h3 class="card-title" data-i18n="section.deviceList">Device List</h3>
                         <div class="card-actions">
-                            <button class="btn btn-primary" id="addDeviceBtn">
-                                <i class="fas fa-plus"></i> 添加设备
+                            <button class="btn btn-primary" id="addDeviceBtn" data-i18n="action.addDevice">
+                                <i class="fas fa-plus"></i> Add Device
                             </button>
-                            <button class="btn btn-outline" id="refreshDevices">
-                                <i class="fas fa-sync-alt"></i> 刷新
+                            <button class="btn btn-outline" id="refreshDevices" data-i18n="action.refresh">
+                                <i class="fas fa-sync-alt"></i> Refresh
                             </button>
                         </div>
                     </div>
@@ -956,12 +995,12 @@
                         <table id="devicesTable">
                             <thead>
                                 <tr>
-                                    <th>设备名称</th>
-                                    <th>IP地址</th>
-                                    <th>设备类型</th>
-                                    <th>状态</th>
-                                    <th>最后在线</th>
-                                    <th>操作</th>
+                                    <th data-i18n="table.deviceName">Device Name</th>
+                                    <th data-i18n="table.ipAddress">IP Address</th>
+                                    <th data-i18n="table.deviceType">Device Type</th>
+                                    <th data-i18n="table.status">Status</th>
+                                    <th data-i18n="table.lastOnline">Last Online</th>
+                                    <th data-i18n="table.actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="devicesList">
@@ -1735,7 +1774,7 @@
                     if (data.success && data.user) {
                         // 更新用户信息
                         document.getElementById('username').textContent = data.user.username;
-                        document.getElementById('userRole').textContent = data.user.role === 'admin' ? '管理员' : '普通用户';
+                        document.getElementById('userRole').textContent = data.user.role === 'admin' ? 'Administrator' : 'User';
                         document.getElementById('userAvatar').textContent = data.user.username.charAt(0).toUpperCase();
                     } else {
                         window.location.href = '/login.html';
@@ -1747,10 +1786,26 @@
                 });
             }
             
+            // 添加消息国际化支持
+            function showMessage(message, type) {
+                const messageEl = document.getElementById('message');
+                messageEl.textContent = message;
+                messageEl.className = 'message message-' + type;
+                messageEl.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 3000);
+            }
+            
             // 初始化页面
             checkLoginStatus();
             loadDashboardData();
-        });
+            
+            // 初始化国际化
+            document.addEventListener('DOMContentLoaded', function() {
+                initI18n();
+            });
     </script>
 </body>
 </html>

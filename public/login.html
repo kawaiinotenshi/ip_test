@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2196F3">
-    <meta name="description" content="模块化内网管理系统">
-    <title>模块化内网管理系统 - 登录</title>
+    <meta name="description" content="Intranet Management System">
+    <title>Intranet Management System - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -40,6 +40,37 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+        }
+
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(33, 150, 243, 0.1);
+            border-color: var(--primary);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
         }
 
         .login-container {
@@ -200,14 +231,30 @@
             .login-header, .login-body {
                 padding: 20px 16px;
             }
+            
+            .language-switcher {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="ja">日本語</button>
+    </div>
+
     <div class="login-container">
         <div class="login-header">
-            <h1><i class="fas fa-network-wired"></i> 模块化内网管理系统</h1>
-            <p>请登录以访问管理功能</p>
+            <h1 data-i18n="login.title"><i class="fas fa-network-wired"></i> Intranet Management System</h1>
+            <p data-i18n="login.subtitle">Sign in to access management functions</p>
         </div>
         
         <div class="login-body">
@@ -215,34 +262,121 @@
             
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="username">用户名</label>
+                    <label data-i18n="login.username" for="username">Username</label>
                     <div class="input-group">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" required placeholder="输入用户名">
+                        <input type="text" id="username" required placeholder="Enter username">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="password">密码</label>
+                    <label data-i18n="login.password" for="password">Password</label>
                     <div class="input-group">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" required placeholder="输入密码">
+                        <input type="password" id="password" required placeholder="Enter password">
                     </div>
                 </div>
                 
                 <button type="submit" id="loginBtn" class="btn">
-                    <span id="btnText">登录</span>
+                    <span id="btnText" data-i18n="login.signIn">Sign In</span>
                     <span id="btnLoader" class="loading" style="display: none;"></span>
                 </button>
             </form>
             
             <div class="forgot-password">
-                <a href="#" id="toggleRegister">注册新用户</a>
+                <a href="#" id="toggleRegister" data-i18n="login.register">Register New User</a>
             </div>
         </div>
     </div>
 
     <script>
+        // Translation object
+        const translations = {
+            en: {
+                "login.title": "<i class=\"fas fa-network-wired\"></i> Intranet Management System",
+                "login.subtitle": "Sign in to access management functions",
+                "login.username": "Username",
+                "login.password": "Password",
+                "login.signIn": "Sign In",
+                "login.register": "Register New User",
+                "login.haveAccount": "Already have an account? Back to Login",
+                "register.title": "<i class=\"fas fa-user-plus\"></i> Register New User",
+                "register.subtitle": "Create a new account to access the system",
+                "register.signUp": "Sign Up",
+                "messages.loginSuccess": "Login successful, redirecting...",
+                "messages.registerSuccess": "Registration successful, please login",
+                "messages.loginFailed": "Login failed, please try again",
+                "messages.registerFailed": "Registration failed, please try again",
+                "messages.networkError": "Network error, please try again later",
+                "messages.emptyFields": "Please enter username and password",
+                "placeholders.username": "Enter username",
+                "placeholders.password": "Enter password"
+            },
+            ja: {
+                "login.title": "<i class=\"fas fa-network-wired\"></i> イントラネット管理システム",
+                "login.subtitle": "管理機能にアクセスするにはサインイン",
+                "login.username": "ユーザー名",
+                "login.password": "パスワード",
+                "login.signIn": "サインイン",
+                "login.register": "新規ユーザー登録",
+                "login.haveAccount": "すでにアカウントをお持ちですか？ログインに戻る",
+                "register.title": "<i class=\"fas fa-user-plus\"></i> 新規ユーザー登録",
+                "register.subtitle": "システムにアクセスするために新しいアカウントを作成",
+                "register.signUp": "サインアップ",
+                "messages.loginSuccess": "ログイン成功、リダイレクト中...",
+                "messages.registerSuccess": "登録成功、ログインしてください",
+                "messages.loginFailed": "ログイン失敗、もう一度お試しください",
+                "messages.registerFailed": "登録失敗、もう一度お試しください",
+                "messages.networkError": "ネットワークエラー、後でもう一度お試しください",
+                "messages.emptyFields": "ユーザー名とパスワードを入力してください",
+                "placeholders.username": "ユーザー名を入力",
+                "placeholders.password": "パスワードを入力"
+            }
+        };
+
+        // Current language
+        let currentLang = 'en';
+        let isRegisterMode = false;
+
+        // Update UI elements with translations
+        function updateTranslations(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // For elements that need HTML content (like those with icons)
+                    if (key.includes('title')) {
+                        element.innerHTML = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Update placeholders
+            document.getElementById('username').placeholder = translations[lang]["placeholders.username"];
+            document.getElementById('password').placeholder = translations[lang]["placeholders.password"];
+        }
+
+        // Switch language
+        function switchLanguage(lang) {
+            if (lang === currentLang) return;
+            
+            currentLang = lang;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
+            
+            // Update translations
+            updateTranslations(lang);
+            
+            // Update page title
+            document.title = lang === 'en' ? 'Intranet Management System - Login' : 'イントラネット管理システム - ログイン';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');
             const usernameInput = document.getElementById('username');
@@ -253,9 +387,14 @@
             const messageDiv = document.getElementById('message');
             const toggleRegister = document.getElementById('toggleRegister');
             
-            let isRegisterMode = false;
+            // Language switcher event listeners
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchLanguage(this.getAttribute('data-lang'));
+                });
+            });
             
-            // 显示消息
+            // Show message
             function showMessage(message, type = 'error') {
                 messageDiv.textContent = message;
                 messageDiv.className = `message message-${type}`;
@@ -266,27 +405,30 @@
                 }, 3000);
             }
             
-            // 切换登录/注册模式
+            // Toggle login/register mode
             toggleRegister.addEventListener('click', function(e) {
                 e.preventDefault();
                 isRegisterMode = !isRegisterMode;
                 
                 if (isRegisterMode) {
-                    document.querySelector('.login-header h1').innerHTML = '<i class="fas fa-user-plus"></i> 注册新用户';
-                    document.querySelector('.login-header p').textContent = '创建新账户以访问系统';
-                    btnText.textContent = '注册';
-                    toggleRegister.textContent = '已有账户？返回登录';
+                    document.querySelector('.login-header h1').setAttribute('data-i18n', 'register.title');
+                    document.querySelector('.login-header p').setAttribute('data-i18n', 'register.subtitle');
+                    btnText.setAttribute('data-i18n', 'register.signUp');
+                    toggleRegister.setAttribute('data-i18n', 'login.haveAccount');
                 } else {
-                    document.querySelector('.login-header h1').innerHTML = '<i class="fas fa-network-wired"></i> 模块化内网管理系统';
-                    document.querySelector('.login-header p').textContent = '请登录以访问管理功能';
-                    btnText.textContent = '登录';
-                    toggleRegister.textContent = '注册新用户';
+                    document.querySelector('.login-header h1').setAttribute('data-i18n', 'login.title');
+                    document.querySelector('.login-header p').setAttribute('data-i18n', 'login.subtitle');
+                    btnText.setAttribute('data-i18n', 'login.signIn');
+                    toggleRegister.setAttribute('data-i18n', 'login.register');
                 }
+                
+                // Update translations
+                updateTranslations(currentLang);
                 
                 messageDiv.style.display = 'none';
             });
             
-            // 表单提交处理
+            // Form submission handling
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -294,16 +436,16 @@
                 const password = passwordInput.value.trim();
                 
                 if (!username || !password) {
-                    showMessage('请输入用户名和密码');
+                    showMessage(translations[currentLang]["messages.emptyFields"]);
                     return;
                 }
                 
-                // 显示加载状态
+                // Show loading state
                 btnText.style.display = 'none';
                 btnLoader.style.display = 'inline-block';
                 loginBtn.disabled = true;
                 
-                // 根据模式选择API端点
+                // Choose API endpoint based on mode
                 const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
                 const formData = { username, password };
                 
@@ -316,41 +458,44 @@
                 })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('网络响应错误');
+                        throw new Error('Network response error');
                     }
                     return response.json();
                 })
                 .then(data => {
                     if (data.success) {
                         if (isRegisterMode) {
-                            showMessage('注册成功，请登录', 'success');
-                            // 切换回登录模式
+                            showMessage(translations[currentLang]["messages.registerSuccess"], 'success');
+                            // Switch back to login mode
                             toggleRegister.click();
                         } else {
-                            // 处理登录成功
-                            showMessage('登录成功，正在跳转...', 'success');
-                            // 登录成功后跳转到管理控制台
+                            // Handle login success
+                            showMessage(translations[currentLang]["messages.loginSuccess"], 'success');
+                            // Redirect to dashboard after login success
                             setTimeout(() => {
                                 window.location.href = '/dashboard.html';
                             }, 1500);
                         }
                     } else {
-                        showMessage(data.error || '操作失败', 'error');
+                        showMessage(data.error || (isRegisterMode ? 
+                            translations[currentLang]["messages.registerFailed"] : 
+                            translations[currentLang]["messages.loginFailed"]), 
+                            'error');
                     }
                 })
                 .catch(error => {
-                    showMessage('网络错误，请稍后重试', 'error');
-                    console.error('请求错误:', error);
+                    showMessage(translations[currentLang]["messages.networkError"], 'error');
+                    console.error('Request error:', error);
                 })
                 .finally(() => {
-                    // 恢复按钮状态
+                    // Restore button state
                     btnText.style.display = 'inline';
                     btnLoader.style.display = 'none';
                     loginBtn.disabled = false;
                 });
             });
             
-            // 自动填充管理员信息作为提示（开发环境）
+            // Auto-fill admin information as hint (development environment)
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 usernameInput.value = 'admin';
                 passwordInput.value = 'admin123';

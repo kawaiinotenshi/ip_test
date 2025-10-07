@@ -38,3 +38,7 @@ coverage/
 
 # Data files
 data.json.backup
+database.db
+
+# JS folder is tracked, we don't ignore it
+# public/js/
