@@ -1,7 +1,7 @@
 {
-  "name": "ip-test",
+  "name": "intranet-management-system",
   "version": "1.0.0",
-  "description": "内网端口管理工具 - 支持子内网数据处理与多语言",
+  "description": "内网全面管理系统 - 包含端口管理、设备监控、网络拓扑等功能模块",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,14 +10,20 @@
   "author": "kawaiinotenshi",
   "license": "MIT",
   "keywords": [
-    "内网",
+    "内网管理",
     "端口管理",
-    "数据处理",
-    "多语言支持",
-    "内网工具"
+    "设备监控",
+    "网络拓扑",
+    "多模块系统"
   ],
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "better-sqlite3": "^11.1.2",
+    "bcrypt": "^5.1.1",
+    "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

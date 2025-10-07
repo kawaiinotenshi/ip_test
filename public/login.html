@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2196F3">
+    <meta name="description" content="模块化内网管理系统">
+    <title>模块化内网管理系统 - 登录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary: #4CAF50;
+            --error: #f44336;
+            --warning: #ff9800;
+            --info: #03a9f4;
+            --success: #4caf50;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --background: #f5f5f5;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .login-body {
+            padding: 30px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: var(--background);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+            background-color: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .message-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(244, 67, 54, 0.2);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 10px;
+            }
+            
+            .login-header, .login-body {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1><i class="fas fa-network-wired"></i> 模块化内网管理系统</h1>
+            <p>请登录以访问管理功能</p>
+        </div>
+        
+        <div class="login-body">
+            <div id="message" class="message"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" required placeholder="输入用户名">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" required placeholder="输入密码">
+                    </div>
+                </div>
+                
+                <button type="submit" id="loginBtn" class="btn">
+                    <span id="btnText">登录</span>
+                    <span id="btnLoader" class="loading" style="display: none;"></span>
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" id="toggleRegister">注册新用户</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const messageDiv = document.getElementById('message');
+            const toggleRegister = document.getElementById('toggleRegister');
+            
+            let isRegisterMode = false;
+            
+            // 显示消息
+            function showMessage(message, type = 'error') {
+                messageDiv.textContent = message;
+                messageDiv.className = `message message-${type}`;
+                messageDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }
+            
+            // 切换登录/注册模式
+            toggleRegister.addEventListener('click', function(e) {
+                e.preventDefault();
+                isRegisterMode = !isRegisterMode;
+                
+                if (isRegisterMode) {
+                    document.querySelector('.login-header h1').innerHTML = '<i class="fas fa-user-plus"></i> 注册新用户';
+                    document.querySelector('.login-header p').textContent = '创建新账户以访问系统';
+                    btnText.textContent = '注册';
+                    toggleRegister.textContent = '已有账户？返回登录';
+                } else {
+                    document.querySelector('.login-header h1').innerHTML = '<i class="fas fa-network-wired"></i> 模块化内网管理系统';
+                    document.querySelector('.login-header p').textContent = '请登录以访问管理功能';
+                    btnText.textContent = '登录';
+                    toggleRegister.textContent = '注册新用户';
+                }
+                
+                messageDiv.style.display = 'none';
+            });
+            
+            // 表单提交处理
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                if (!username || !password) {
+                    showMessage('请输入用户名和密码');
+                    return;
+                }
+                
+                // 显示加载状态
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline-block';
+                loginBtn.disabled = true;
+                
+                // 根据模式选择API端点
+                const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
+                const formData = { username, password };
+                
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应错误');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        if (isRegisterMode) {
+                            showMessage('注册成功，请登录', 'success');
+                            // 切换回登录模式
+                            toggleRegister.click();
+                        } else {
+                            // 处理登录成功
+                            showMessage('登录成功，正在跳转...', 'success');
+                            // 登录成功后跳转到管理控制台
+                            setTimeout(() => {
+                                window.location.href = '/dashboard.html';
+                            }, 1500);
+                        }
+                    } else {
+                        showMessage(data.error || '操作失败', 'error');
+                    }
+                })
+                .catch(error => {
+                    showMessage('网络错误，请稍后重试', 'error');
+                    console.error('请求错误:', error);
+                })
+                .finally(() => {
+                    // 恢复按钮状态
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                    loginBtn.disabled = false;
+                });
+            });
+            
+            // 自动填充管理员信息作为提示（开发环境）
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                usernameInput.value = 'admin';
+                passwordInput.value = 'admin123';
+            }
+        });
+    </script>
+</body>
+</html>
