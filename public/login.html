@@ -3,25 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2196F3">
-    <meta name="description" content="Intranet Management System">
-    <title>Intranet Management System - Login</title>
+    <title>Login - Intranet Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2196F3;
+            --primary-color: #2196F3;
             --primary-dark: #1976D2;
-            --secondary: #4CAF50;
-            --error: #f44336;
-            --warning: #ff9800;
-            --info: #03a9f4;
-            --success: #4caf50;
-            --text-primary: #212121;
-            --text-secondary: #757575;
-            --background: #f5f5f5;
-            --card-bg: #ffffff;
-            --border: #e0e0e0;
-            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --text-light: #666;
+            --border-color: #e0e0e0;
+            --error-color: #f44336;
+            --success-color: #4CAF50;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -31,79 +27,88 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--background);
-            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
             line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
+        /* 语言切换器 */
         .language-switcher {
-            position: fixed;
-            top: 20px;
-            right: 20px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
             display: flex;
             gap: 10px;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .lang-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 8px 16px;
+            background: white;
+            border: 1px solid var(--border-color);
             border-radius: 20px;
+            padding: 6px 16px;
             cursor: pointer;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
-        .lang-btn:hover {
-            background: rgba(33, 150, 243, 0.1);
-            border-color: var(--primary);
-        }
-
+        .lang-btn:hover,
         .lang-btn.active {
-            background: var(--primary);
+            background-color: var(--primary-color);
             color: white;
-            border-color: var(--primary-dark);
+            border-color: var(--primary-color);
         }
 
         .login-container {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
             width: 100%;
             max-width: 400px;
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
 
         .login-header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
-            padding: 30px 20px;
+            padding: 25px;
             text-align: center;
         }
 
         .login-header h1 {
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 22px;
             font-weight: 600;
-        }
-
-        .login-header p {
-            font-size: 14px;
-            opacity: 0.9;
+            margin-bottom: 8px;
         }
 
         .login-body {
-            padding: 30px 20px;
+            padding: 25px;
         }
 
+        /* 消息提示 */
+        .message {
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message-success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .message-error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        /* 表单样式 */
         .form-group {
             margin-bottom: 20px;
         }
@@ -113,109 +118,73 @@
             margin-bottom: 6px;
             font-size: 14px;
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         .input-group {
             position: relative;
         }
 
-        .input-group i {
+        .input-group .form-control {
+            padding-left: 40px;
+        }
+
+        .input-icon {
             position: absolute;
             left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 16px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 12px 12px 40px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background-color: var(--background);
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
-            background-color: white;
+            color: var(--text-light);
+            pointer-events: none;
         }
 
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 10px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: var(--primary);
+            transition: var(--transition);
+            background-color: var(--primary-color);
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn:hover {
             background-color: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
         }
 
         .btn:disabled {
-            background-color: var(--text-secondary);
+            background-color: var(--text-light);
             cursor: not-allowed;
-            transform: none;
         }
 
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .message-success {
-            background-color: rgba(76, 175, 80, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-        }
-
-        .message-error {
-            background-color: rgba(244, 67, 54, 0.1);
-            color: var(--error);
-            border: 1px solid rgba(244, 67, 54, 0.2);
-        }
-
-        .forgot-password {
-            text-align: center;
-            margin-top: 16px;
-        }
-
-        .forgot-password a {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-
+        /* 加载指示器 */
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
             border-radius: 50%;
-            border-top-color: white;
+            border-top-color: transparent;
             animation: spin 0.8s linear infinite;
         }
 
@@ -223,29 +192,26 @@
             to { transform: rotate(360deg); }
         }
 
+        /* 响应式设计 */
         @media (max-width: 480px) {
-            .login-container {
-                margin: 10px;
+            body {
+                padding: 15px;
             }
-            
-            .login-header, .login-body {
-                padding: 20px 16px;
+
+            .login-header,
+            .login-body {
+                padding: 20px;
             }
-            
+
             .language-switcher {
                 top: 10px;
                 right: 10px;
-            }
-            
-            .lang-btn {
-                padding: 6px 12px;
-                font-size: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Language Switcher -->
+    <!-- 语言切换器 -->
     <div class="language-switcher">
         <button class="lang-btn active" data-lang="en">English</button>
         <button class="lang-btn" data-lang="ja">日本語</button>
@@ -253,130 +219,107 @@
 
     <div class="login-container">
         <div class="login-header">
-            <h1 data-i18n="login.title"><i class="fas fa-network-wired"></i> Intranet Management System</h1>
-            <p data-i18n="login.subtitle">Sign in to access management functions</p>
+            <h1 data-i18n="login.title">Intranet Management System</h1>
         </div>
         
         <div class="login-body">
+            <!-- 消息提示区域 -->
             <div id="message" class="message"></div>
             
             <form id="loginForm">
                 <div class="form-group">
-                    <label data-i18n="login.username" for="username">Username</label>
+                    <label for="username" data-i18n="login.username">Username</label>
                     <div class="input-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="username" required placeholder="Enter username">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="username" class="form-control" required>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label data-i18n="login.password" for="password">Password</label>
+                    <label for="password" data-i18n="login.password">Password</label>
                     <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="password" required placeholder="Enter password">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" class="form-control" required>
                     </div>
                 </div>
                 
-                <button type="submit" id="loginBtn" class="btn">
+                <button type="submit" class="btn" id="loginBtn">
                     <span id="btnText" data-i18n="login.signIn">Sign In</span>
-                    <span id="btnLoader" class="loading" style="display: none;"></span>
+                    <span id="btnLoader" class="loading" style="display: none; margin-left: 10px;"></span>
                 </button>
             </form>
-            
-            <div class="forgot-password">
-                <a href="#" id="toggleRegister" data-i18n="login.register">Register New User</a>
-            </div>
         </div>
     </div>
 
     <script>
-        // Translation object
+        // 国际化资源
         const translations = {
             en: {
-                "login.title": "<i class=\"fas fa-network-wired\"></i> Intranet Management System",
-                "login.subtitle": "Sign in to access management functions",
+                "login.title": "Intranet Management System",
                 "login.username": "Username",
                 "login.password": "Password",
                 "login.signIn": "Sign In",
-                "login.register": "Register New User",
-                "login.haveAccount": "Already have an account? Back to Login",
-                "register.title": "<i class=\"fas fa-user-plus\"></i> Register New User",
-                "register.subtitle": "Create a new account to access the system",
-                "register.signUp": "Sign Up",
                 "messages.loginSuccess": "Login successful, redirecting...",
-                "messages.registerSuccess": "Registration successful, please login",
                 "messages.loginFailed": "Login failed, please try again",
-                "messages.registerFailed": "Registration failed, please try again",
-                "messages.networkError": "Network error, please try again later",
-                "messages.emptyFields": "Please enter username and password",
-                "placeholders.username": "Enter username",
-                "placeholders.password": "Enter password"
+                "messages.emptyFields": "Please enter username and password"
             },
             ja: {
-                "login.title": "<i class=\"fas fa-network-wired\"></i> イントラネット管理システム",
-                "login.subtitle": "管理機能にアクセスするにはサインイン",
+                "login.title": "イントラネット管理システム",
                 "login.username": "ユーザー名",
                 "login.password": "パスワード",
                 "login.signIn": "サインイン",
-                "login.register": "新規ユーザー登録",
-                "login.haveAccount": "すでにアカウントをお持ちですか？ログインに戻る",
-                "register.title": "<i class=\"fas fa-user-plus\"></i> 新規ユーザー登録",
-                "register.subtitle": "システムにアクセスするために新しいアカウントを作成",
-                "register.signUp": "サインアップ",
                 "messages.loginSuccess": "ログイン成功、リダイレクト中...",
-                "messages.registerSuccess": "登録成功、ログインしてください",
                 "messages.loginFailed": "ログイン失敗、もう一度お試しください",
-                "messages.registerFailed": "登録失敗、もう一度お試しください",
-                "messages.networkError": "ネットワークエラー、後でもう一度お試しください",
-                "messages.emptyFields": "ユーザー名とパスワードを入力してください",
-                "placeholders.username": "ユーザー名を入力",
-                "placeholders.password": "パスワードを入力"
+                "messages.emptyFields": "ユーザー名とパスワードを入力してください"
             }
         };
 
-        // Current language
+        // 当前语言
         let currentLang = 'en';
-        let isRegisterMode = false;
 
-        // Update UI elements with translations
+        // 更新UI元素的翻译
         function updateTranslations(lang) {
             const elements = document.querySelectorAll('[data-i18n]');
             elements.forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key]) {
-                    // For elements that need HTML content (like those with icons)
-                    if (key.includes('title')) {
-                        element.innerHTML = translations[lang][key];
-                    } else {
-                        element.textContent = translations[lang][key];
-                    }
+                    element.textContent = translations[lang][key];
                 }
             });
             
-            // Update placeholders
-            document.getElementById('username').placeholder = translations[lang]["placeholders.username"];
-            document.getElementById('password').placeholder = translations[lang]["placeholders.password"];
+            // 更新页面标题
+            document.title = lang === 'en' ? 'Intranet Management System - Login' : 'イントラネット管理システム - ログイン';
         }
 
-        // Switch language
+        // 切换语言
         function switchLanguage(lang) {
             if (lang === currentLang) return;
             
             currentLang = lang;
             
-            // Update active button
+            // 更新活动按钮
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
             
-            // Update translations
+            // 更新翻译
             updateTranslations(lang);
-            
-            // Update page title
-            document.title = lang === 'en' ? 'Intranet Management System - Login' : 'イントラネット管理システム - ログイン';
         }
 
+        // 显示消息
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = `message message-${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');
             const usernameInput = document.getElementById('username');
@@ -384,51 +327,15 @@
             const loginBtn = document.getElementById('loginBtn');
             const btnText = document.getElementById('btnText');
             const btnLoader = document.getElementById('btnLoader');
-            const messageDiv = document.getElementById('message');
-            const toggleRegister = document.getElementById('toggleRegister');
             
-            // Language switcher event listeners
+            // 语言切换器事件监听器
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     switchLanguage(this.getAttribute('data-lang'));
                 });
             });
             
-            // Show message
-            function showMessage(message, type = 'error') {
-                messageDiv.textContent = message;
-                messageDiv.className = `message message-${type}`;
-                messageDiv.style.display = 'block';
-                
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 3000);
-            }
-            
-            // Toggle login/register mode
-            toggleRegister.addEventListener('click', function(e) {
-                e.preventDefault();
-                isRegisterMode = !isRegisterMode;
-                
-                if (isRegisterMode) {
-                    document.querySelector('.login-header h1').setAttribute('data-i18n', 'register.title');
-                    document.querySelector('.login-header p').setAttribute('data-i18n', 'register.subtitle');
-                    btnText.setAttribute('data-i18n', 'register.signUp');
-                    toggleRegister.setAttribute('data-i18n', 'login.haveAccount');
-                } else {
-                    document.querySelector('.login-header h1').setAttribute('data-i18n', 'login.title');
-                    document.querySelector('.login-header p').setAttribute('data-i18n', 'login.subtitle');
-                    btnText.setAttribute('data-i18n', 'login.signIn');
-                    toggleRegister.setAttribute('data-i18n', 'login.register');
-                }
-                
-                // Update translations
-                updateTranslations(currentLang);
-                
-                messageDiv.style.display = 'none';
-            });
-            
-            // Form submission handling
+            // 表单提交处理
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -440,62 +347,28 @@
                     return;
                 }
                 
-                // Show loading state
+                // 显示加载状态
                 btnText.style.display = 'none';
                 btnLoader.style.display = 'inline-block';
                 loginBtn.disabled = true;
                 
-                // Choose API endpoint based on mode
-                const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
-                const formData = { username, password };
-                
-                fetch(endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response error');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        if (isRegisterMode) {
-                            showMessage(translations[currentLang]["messages.registerSuccess"], 'success');
-                            // Switch back to login mode
-                            toggleRegister.click();
-                        } else {
-                            // Handle login success
-                            showMessage(translations[currentLang]["messages.loginSuccess"], 'success');
-                            // Redirect to dashboard after login success
-                            setTimeout(() => {
-                                window.location.href = '/dashboard.html';
-                            }, 1500);
-                        }
-                    } else {
-                        showMessage(data.error || (isRegisterMode ? 
-                            translations[currentLang]["messages.registerFailed"] : 
-                            translations[currentLang]["messages.loginFailed"]), 
-                            'error');
-                    }
-                })
-                .catch(error => {
-                    showMessage(translations[currentLang]["messages.networkError"], 'error');
-                    console.error('Request error:', error);
-                })
-                .finally(() => {
-                    // Restore button state
-                    btnText.style.display = 'inline';
-                    btnLoader.style.display = 'none';
-                    loginBtn.disabled = false;
-                });
+                // 模拟登录处理
+                setTimeout(() => {
+                    // 创建会话存储以模拟登录
+                    sessionStorage.setItem('loggedIn', 'true');
+                    sessionStorage.setItem('user', JSON.stringify({ username: username, role: 'admin' }));
+                    
+                    // 处理登录成功
+                    showMessage(translations[currentLang]["messages.loginSuccess"], 'success');
+                    
+                    // 重定向到仪表盘
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+                }, 800);
             });
             
-            // Auto-fill admin information as hint (development environment)
+            // 开发环境下自动填充admin信息作为提示
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 usernameInput.value = 'admin';
                 passwordInput.value = 'admin123';
