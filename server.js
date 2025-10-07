@@ -229,14 +229,14 @@ app.post('/api/custom-ip', (req, res) => {
 // 启动服务器
 app.listen(PORT, () => {
     const localIPs = getLocalIPAddress();
-    console.log(`服务器已启动在 http://localhost:${PORT}`);
+    console.log(`Server started at http://localhost:${PORT}`);
     console.log('');
-    console.log('真实内网IP地址（请使用这些地址进行实际连接）：');
+    console.log('Real Intranet IP Addresses (Recommended for actual connections):');
     localIPs.forEach(ip => {
         console.log(`http://${ip}:${PORT}`);
     });
     console.log('');
-    console.log('模拟IP地址（仅供参考）：');
+    console.log('Mock IP Addresses (For reference only):');
     mockIPs.forEach(ip => {
         console.log(`http://${ip}:${PORT}`);
     });

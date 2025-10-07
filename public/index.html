@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#4CAF50">
-    <meta name="description" content="内网端口管理工具，支持端口数据的增删查改">
-    <title>内网端口管理工具</title>
+    <meta name="description" content="Intranet Port Management Tool">
+    <title id="pageTitle">イントラネット管理ツール</title>
     <style>
         * {
             box-sizing: border-box;
@@ -517,9 +517,40 @@
             visibility: visible;
         }
         
+        .language-switcher {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            padding: 4px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .lang-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .lang-btn:hover:not(.active) {
+            background: #e0e0e0;
+        }
+        
         /* レスポンシブデザイン */
         @media (max-width: 480px) {
-            .container {
                 padding: 12px;
             }
             
@@ -721,6 +752,9 @@
                 element.textContent = element.dataset[lang];
             });
             
+            // 更新ページタイトル
+            document.getElementById('pageTitle').textContent = lang === 'ja' ? 'イントラネット管理ツール' : 'Intranet Management Tool';
+            
             // フォームのプレースホルダーも更新
             updatePlaceholders();
             
@@ -760,10 +794,11 @@
         function updateMessages() {
             const messageDiv = document.getElementById('message');
             if (messageDiv.style.display === 'block') {
-                // メッセージのタイプに応じて翻訳
-                if (messageDiv.textContent.includes('成功') || messageDiv.textContent.includes('成功')) {
-                    const successMsg = currentLanguage === 'ja' ? '成功' : 'Success';
-                    messageDiv.textContent = messageDiv.textContent.replace(/成功/g, successMsg);
+                // メッセージの内容に応じて翻訳
+                const currentMessage = messageDiv.textContent;
+                if (currentMessage.includes('成功') || currentMessage.includes('Success')) {
+                    const successMsg = currentLanguage === 'ja' ? '操作が成功しました' : 'Operation successful';
+                    messageDiv.textContent = successMsg;
                 }
             }
         }
@@ -1181,7 +1216,10 @@
             // 刷新按钮
             document.getElementById('refreshBtn').addEventListener('click', function() {
                 loadPortsData();
-                showMessage('数据已刷新', 'info');
+                showMessage(
+                    currentLanguage === 'ja' ? 'データを更新しました' : 'Data refreshed', 
+                    'info'
+                );
             });
             
             // 点击对话框外部关闭对话框
@@ -1189,16 +1227,6 @@
                 if (e.target === this) {
                     this.classList.remove('active');
                 }
-            });
-            
-            // ESCキーでダイアログを閉じる
-            // 刷新按钮
-            document.getElementById('refreshBtn').addEventListener('click', function() {
-                loadPortsData();
-                showMessage(
-                    currentLanguage === 'ja' ? 'データを更新しました' : 'Data refreshed', 
-                    'info'
-                );
             });
             
             // ESCキーでダイアログを閉じる
